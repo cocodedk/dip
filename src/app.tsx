@@ -85,7 +85,7 @@ export function App({ controller }: { controller: Controller }) {
 		const timer = window.setInterval(() => controller.expire(), 1000);
 		if (import.meta.env.PROD && "serviceWorker" in navigator) {
 			navigator.serviceWorker
-				.register("/sw.js")
+				.register("/sw.js", { updateViaCache: "none" })
 				.then(() => navigator.serviceWorker.ready)
 				.then(() => setOfflineReady(true))
 				.catch(() => setOfflineReady(false));

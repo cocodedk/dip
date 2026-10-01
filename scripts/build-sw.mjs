@@ -27,12 +27,11 @@ await writeFile(
 	"dist/sw.js",
 	`const CACHE = ${JSON.stringify(cache)};
 const ASSETS = ${JSON.stringify(assets)};
-self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))));
+self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS.map(path => new Request(path, { cache: 'reload' })))).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('proeveklar-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
-self.addEventListener('message', event => { if (event.data === 'ACTIVATE') self.skipWaiting(); });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
-  if (event.request.mode === 'navigate') { const path = ['/om', '/om/', '/om/index.html'].includes(new URL(event.request.url).pathname) ? '/om/index.html' : '/index.html'; event.respondWith(caches.open(CACHE).then(cache => cache.match(path)).then(cached => cached || fetch(event.request))); return; }
+  if (event.request.mode === 'navigate') { const path = ['/om', '/om/', '/om/index.html'].includes(new URL(event.request.url).pathname) ? '/om/index.html' : '/index.html'; event.respondWith(fetch(event.request, { cache: 'no-store' }).catch(() => caches.open(CACHE).then(cache => cache.match(path)).then(cached => cached || Response.error()))); return; }
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request)));
 });
 `,
