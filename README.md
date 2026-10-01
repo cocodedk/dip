@@ -63,6 +63,8 @@ google-chrome --headless=new --no-sandbox --disable-dev-shm-usage \
   --user-data-dir=/tmp/proeveklar-chrome about:blank
 
 node scripts/browser-proof.mjs
+# Targeted quiz layout and complete 40/45-question exam checks:
+node scripts/browser-proof.mjs --quiz-layout
 ```
 
 The browser proof clears this disposable profile's app data, calls **real Chrome `getTools()` and `executeTool()`**, and uses Playwright only to open tabs and capture screenshots. It proves scoring boundaries, input rejection, persistence, export/import, all tools and a complete offline 45-question test, plus About content, links, session resumption and layouts at 360, 390, 768 and 1280 pixels. Screenshots and receipts go to `artifacts/`, excluded from the production build. Missing tools fail with `NOT PROVED`. For the no-WebMCP check, start a separate disposable Chrome on port 9223 without the flag and run `BU_CDP_URL=http://127.0.0.1:9223 node scripts/browser-proof.mjs --without-webmcp`.
