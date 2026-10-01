@@ -31,14 +31,14 @@ export function Home(props: Props) {
 			<section {...stylex.props(s.card, s.hero)}>
 				<p {...stylex.props(s.eyebrow, s.heroMuted)}>Et skridt ad gangen</p>
 				<h1 {...stylex.props(s.title)}>
-					Lær Danmark
+					Øv dig til
 					<br />
-					at kende.
+					indfødsretsprøven.
 				</h1>
 				<p {...stylex.props(s.lead, s.heroMuted)}>
-					10 spørgsmål. Tid til at tænke.
+					Lær Danmark at kende med tidligere prøver.
 					<br />
-					Et svar, du husker lidt længere.
+					10 spørgsmål. Tid til at tænke.
 				</p>
 				<Button
 					disabled={view.canResume}

@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite --host 0.0.0.0",
-		"build": "tsc -b && vite build && node scripts/build-sw.mjs",
+		"build": "tsc -b && vite build && node scripts/prerender.mjs && node scripts/build-sw.mjs",
 		"preview": "vite preview --host 0.0.0.0",
 		"test": "vitest run --reporter=default --reporter=json --outputFile=artifacts/unit.json && node scripts/assert-test-count.mjs",
 		"lint": "oxlint src scripts/*.mjs && biome format src scripts/*.mjs package.json tsconfig.json vite.config.ts && biome lint src/base.css package.json tsconfig.json"

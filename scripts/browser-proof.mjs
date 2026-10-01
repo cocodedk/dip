@@ -175,9 +175,38 @@ try {
 			"App renders without WebMCP",
 			(
 				await cdp.evaluate('document.querySelector("main h1")?.textContent')
-			).includes("Lær Danmark"),
+			).includes("indfødsretsprøven"),
 		);
 		await screenshot("without-webmcp");
+		await cdp.call("Emulation.setScriptExecutionDisabled", { value: true });
+		for (const [path, heading] of [
+			["/", "indfødsretsprøven"],
+			["/om/", "Om Prøveklar"],
+		]) {
+			await page.goto(new URL(path, base).href);
+			const html = await cdp.evaluate(
+				'({heading: document.querySelector("main h1")?.textContent, headings: document.querySelectorAll("h1").length, text: document.querySelector("main")?.textContent, links: [...document.querySelectorAll("nav a")].map(a => a.getAttribute("href"))})',
+			);
+			check(
+				`${path} has readable HTML without JavaScript`,
+				html.heading?.includes(heading) && html.headings === 1,
+			);
+			check(
+				`${path} has crawlable Home and About links`,
+				["/", "/om/"].every((link) => html.links.includes(link)),
+			);
+			check(
+				`${path} exposes its sources without JavaScript`,
+				path === "/"
+					? html.text.includes("2020") && html.text.includes("2026")
+					: html.text.includes("Babak Bandpey") &&
+							html.text.includes("Apache-2.0"),
+			);
+			await page.screenshot({
+				path: `${dir}/no-js-${path === "/" ? "home" : "about"}.png`,
+				fullPage: true,
+			});
+		}
 	} else {
 		await tools(["describe", "navigate", "start_practice"]);
 		check("bank exposes 570 dated questions", (await state()).bankSize === 570);
@@ -199,6 +228,33 @@ try {
 			await screenshot(targetPage);
 		}
 		await navigate("about");
+		const aboutMetadata = await cdp.evaluate(
+			'({path: location.pathname, title: document.title, canonical: document.querySelector("link[rel=canonical]").href, graph: JSON.parse(document.getElementById("structured-data").textContent)["@graph"]})',
+		);
+		check(
+			"About navigation updates its public URL and metadata",
+			aboutMetadata.path === "/om/" &&
+				aboutMetadata.title.includes("Babak Bandpey") &&
+				aboutMetadata.canonical === "https://dip.cocode.dk/om/" &&
+				aboutMetadata.graph.some(
+					(node) =>
+						node["@type"] === "AboutPage" &&
+						node.url === aboutMetadata.canonical,
+				),
+		);
+		await page.goto(new URL("/om/", base).href);
+		await tools(["describe", "navigate"]);
+		check(
+			"About opens directly after a reload",
+			(await state()).page === "about",
+		);
+		await page.goto(new URL("/om/index.html", base).href);
+		await tools(["describe", "navigate"]);
+		check(
+			"About file alias opens the correct view and canonical path",
+			(await state()).page === "about" &&
+				(await cdp.evaluate('location.pathname === "/om/"')),
+		);
 		const aboutState = await state();
 		check(
 			"About exposes the shared author and title",
@@ -244,7 +300,7 @@ try {
 			),
 		);
 		const renderedAbout = await cdp.evaluate(
-			'({text: document.querySelector("main").textContent, links: [...document.querySelectorAll("main a")].map(a => a.href), nav: [...document.querySelectorAll("nav button")].map(b => ({text:b.textContent, current:b.getAttribute("aria-current")}))})',
+			'({text: document.querySelector("main").textContent, links: [...document.querySelectorAll("main a")].map(a => a.href), nav: [...document.querySelectorAll("nav button, nav a")].map(b => ({text:b.textContent, current:b.getAttribute("aria-current")}))})',
 		);
 		check(
 			"About renders author, links and active Om navigation",
@@ -335,6 +391,14 @@ try {
 			s.progress.xp === 10 && s.session.question.correct === true,
 		);
 		await navigate("about");
+		await page.goto(new URL("/om/", base).href);
+		await tools(["resume_session"]);
+		check(
+			"About reload preserves the active practice and XP",
+			(await state()).page === "about" &&
+				(await state()).progress.xp === 10 &&
+				(await state()).session.question.id === firstId,
+		);
 		await tools(["resume_session"]);
 		await call("resume_session");
 		check("resume returns to quiz", (await state()).page === "quiz");
@@ -434,6 +498,15 @@ try {
 		});
 		await page.goto(url);
 		await tools(["describe"]);
+		await page.goto(new URL("/om/", base).href);
+		await tools(["describe", "navigate"]);
+		check("About direct URL renders offline", (await state()).page === "about");
+		check(
+			"Offline About retains its page-specific canonical",
+			await cdp.evaluate(
+				'document.querySelector("link[rel=canonical]").href === "https://dip.cocode.dk/om/"',
+			),
+		);
 		check(
 			"offline reload preserves progress",
 			(await state()).progress.xp > 10,
