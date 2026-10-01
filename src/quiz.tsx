@@ -41,7 +41,7 @@ export function Quiz({
 		<>
 			<div {...stylex.props(s.row)}>
 				<span {...stylex.props(s.eyebrow)} style={{ margin: 0 }}>
-					Spørgsmål {a.index + 1} af {a.total}
+					{test ? "Prøve" : "Øvelse"} · Spørgsmål {a.index + 1} af {a.total}
 				</span>
 				{test && (
 					<time aria-label="Tid tilbage" {...stylex.props(s.pill)}>
@@ -59,9 +59,6 @@ export function Quiz({
 				<span {...stylex.props(s.small, s.muted)}>{q.category}</span>
 				<span {...stylex.props(s.small, s.muted)}>{q.term}</span>
 			</div>
-			<p {...stylex.props(s.small, s.muted)} style={{ margin: "8px 0 0" }}>
-				Svar efter prøvedatoen · officielt arkiv
-			</p>
 			<h1 {...stylex.props(s.question)}>{q.text}</h1>
 			<div {...stylex.props(s.stack)} role="group" aria-label="Svarmuligheder">
 				{q.options.map((option) => (
@@ -107,7 +104,7 @@ export function Quiz({
 					</a>
 				</div>
 			)}
-			<div {...stylex.props(s.actions)}>
+			<div {...stylex.props(s.actions, s.quizActions)}>
 				{test && a.index > 0 && (
 					<Button secondary onClick={() => act(controller.move(a.index - 1))}>
 						← Forrige

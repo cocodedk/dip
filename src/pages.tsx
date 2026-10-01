@@ -38,7 +38,7 @@ export function Home(props: Props) {
 				<p {...stylex.props(s.lead, s.heroMuted)}>
 					Lær Danmark at kende med tidligere prøver.
 					<br />
-					10 spørgsmål. Tid til at tænke.
+					Dagens øvelse: 10 spørgsmål.
 				</p>
 				<Button
 					disabled={view.canResume}

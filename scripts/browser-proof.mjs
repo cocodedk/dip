@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 const base = process.env.APP_URL || "http://127.0.0.1:4173/";
 const endpoint = process.env.BU_CDP_URL || "http://127.0.0.1:9222";
 const without = process.argv.includes("--without-webmcp");
+const layoutOnly = process.argv.includes("--quiz-layout");
 const bank = JSON.parse(await readFile("i/data/official-exams.json", "utf8"));
 const byId = new Map(bank.map((q) => [q.id, q]));
 const dir = "artifacts/browser";
@@ -165,8 +166,111 @@ async function screenshot(label, width = 390) {
 		fullPage: true,
 	});
 }
+async function quizLayout(label, width, height) {
+	await cdp.call("Emulation.setDeviceMetricsOverride", {
+		width,
+		height,
+		deviceScaleFactor: 1,
+		mobile: true,
+	});
+	await cdp.evaluate(
+		"document.fonts.ready.then(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))",
+	);
+	const layout = await cdp.evaluate(`(() => {
+		const button = [...document.querySelectorAll('main button')].find(b => /Næste spørgsmål|Se resultat|^Afslut prøven →/.test(b.textContent));
+		const rect = button.getBoundingClientRect();
+		const nav = document.querySelector('nav').getBoundingClientRect();
+		const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+		return {top:rect.top, bottom:rect.bottom, navTop:nav.top, hit:button.contains(hit), enabled:!button.disabled, width:innerWidth, scroll:document.documentElement.scrollWidth, counter:document.querySelector('main').firstElementChild.textContent, headingMargin:getComputedStyle(document.querySelector('main h1')).marginTop};
+	})()`);
+	await page.screenshot({
+		path: dir + "/" + label + "-" + width + "x" + height + ".png",
+	});
+	check(
+		`${label} next control visible above navigation at ${width}x${height}`,
+		layout.top >= 0 && layout.bottom <= layout.navTop && layout.hit,
+	);
+	check(`${label} fits ${width}px`, layout.scroll <= layout.width);
+	check(
+		`${label} question top margin is compact`,
+		parseFloat(layout.headingMargin) <= 12,
+	);
+	return layout;
+}
 try {
-	if (without) {
+	if (layoutOnly) {
+		await tools(["describe", "navigate", "start_practice"]);
+		await call("start_practice", { mode: "daily", count: 10 });
+		let active = (await state()).session;
+		await call("answer_question", {
+			question_id: active.question.id,
+			choice: byId.get(active.question.id).answer,
+		});
+		for (const [width, height] of [
+			[390, 667],
+			[320, 568],
+			[360, 640],
+			[390, 844],
+			[430, 932],
+			[768, 1024],
+		]) {
+			const layout = await quizLayout("practice-feedback", width, height);
+			check(
+				"Practice counter identifies the short exercise",
+				layout.counter.includes("Øvelse") && layout.counter.includes("1 af 10"),
+			);
+			check("Answered practice enables the next control", layout.enabled);
+		}
+		check(
+			"Requested archive sentence removed from question view",
+			await cdp.evaluate(
+				'!document.querySelector("main").textContent.includes("Svar efter prøvedatoen · officielt arkiv")',
+			),
+		);
+		await call("move_question", { index: 1 });
+		check(
+			"Next action moves to the second practice question",
+			(await state()).session.index === 1,
+		);
+		await call("finish_session", { confirm: true });
+		for (const term of ["2026-06", "2020-06"]) {
+			await navigate("tests");
+			await call("start_test", { term });
+			active = (await state()).session;
+			const expected = bank.filter((q) => q.term === term).length;
+			check(
+				`${term} retains its complete official exam`,
+				active.total === expected && [40, 45].includes(expected),
+			);
+			const longest = bank
+				.filter((q) => q.term === term)
+				.toSorted(
+					(a, b) =>
+						(b.question + Object.values(b.options).join("")).length -
+						(a.question + Object.values(a.options).join("")).length,
+				)[0];
+			await call("move_question", { index: longest.number - 1 });
+			for (const [width, height] of [
+				[320, 568],
+				[360, 640],
+				[390, 667],
+				[390, 844],
+			]) {
+				const layout = await quizLayout(`exam-${term}`, width, height);
+				check(
+					"Exam counter identifies the full exam",
+					layout.counter.includes("Prøve") &&
+						layout.counter.includes(`af ${expected}`),
+				);
+			}
+			await call("move_question", { index: expected - 1 });
+			await quizLayout(`exam-last-${term}`, 390, 667);
+			await call("finish_session", { confirm: true });
+		}
+		await navigate("progress");
+		await call("manage_progress", { action: "reset", confirm: true });
+		await navigate("home");
+	} else if (without) {
 		check(
 			"WebMCP absent without flag",
 			!(await cdp.evaluate("Boolean(document.modelContext)")),
@@ -575,7 +679,7 @@ try {
 		date: new Date().toISOString(),
 	};
 	await writeFile(
-		`${dir}/${without ? "without-webmcp" : "proof"}.json`,
+		`${dir}/${layoutOnly ? "quiz-layout" : without ? "without-webmcp" : "proof"}.json`,
 		`${JSON.stringify(report, null, 2)}\n`,
 	);
 	console.log(

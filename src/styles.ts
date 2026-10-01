@@ -215,7 +215,7 @@ export const s = stylex.create({
 		fontWeight: 650,
 		lineHeight: 1.4,
 		letterSpacing: "-0.5px",
-		margin: "24px 0",
+		margin: "12px 0 18px",
 	},
 	choice: {
 		display: "flex",
@@ -276,6 +276,14 @@ export const s = stylex.create({
 		marginBlock: 12,
 	},
 	actions: { display: "flex", gap: 10, marginBlock: 20 },
+	quizActions: {
+		position: "sticky",
+		bottom: "calc(64px + env(safe-area-inset-bottom))",
+		zIndex: 9,
+		backgroundColor: "#F2F5F7",
+		paddingBlock: 10,
+		marginBlock: 12,
+	},
 	select: {
 		width: "100%",
 		minHeight: 48,
