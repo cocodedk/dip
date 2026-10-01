@@ -33,6 +33,8 @@ Open http://127.0.0.1:4173/ online once and wait for **Klar offline**; then relo
 
 The production build pre-renders the real React Home and About views as readable HTML at `/` and `/om/`, with distinct titles, descriptions, canonical URLs and structured data. JavaScript restores local progress through the same controller. The build generates the sitemap and offline cache; `scripts/og-image.html` is the source for the 1200×630 social image, rendered with `CHROME_PATH=/usr/bin/google-chrome node scripts/render-og.mjs`. Its content hash versions the image URL so revised previews can be fetched.
 
+Online navigation fetches fresh HTML; offline navigation falls back to the installed build. Updates precache fresh responses and activate after successful installation, including while other tabs remain open; the app does not force a reload or clear local progress. Users upgrading from the original cache-only worker may need one hard refresh to escape its cached page, after which ordinary online reloads fetch the latest deployment.
+
 ## Practice
 
 - Daily practice, values, material, historical news and mistakes; choose 10, 20 or 50 questions, bounded by the category's distinct concepts.
@@ -65,6 +67,8 @@ google-chrome --headless=new --no-sandbox --disable-dev-shm-usage \
 node scripts/browser-proof.mjs
 # Targeted quiz layout and complete 40/45-question exam checks:
 node scripts/browser-proof.mjs --quiz-layout
+# Warm upgrade, using an older production build with two tabs left open:
+OLD_APP_DIR=/path/to/old/dist node scripts/browser-upgrade-proof.mjs
 ```
 
 The browser proof clears this disposable profile's app data, calls **real Chrome `getTools()` and `executeTool()`**, and uses Playwright only to open tabs and capture screenshots. It proves scoring boundaries, input rejection, persistence, export/import, all tools and a complete offline 45-question test, plus About content, links, session resumption and layouts at 360, 390, 768 and 1280 pixels. Screenshots and receipts go to `artifacts/`, excluded from the production build. Missing tools fail with `NOT PROVED`. For the no-WebMCP check, start a separate disposable Chrome on port 9223 without the flag and run `BU_CDP_URL=http://127.0.0.1:9223 node scripts/browser-proof.mjs --without-webmcp`.
