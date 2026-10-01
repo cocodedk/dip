@@ -153,18 +153,42 @@ export function Nav({
 						["progress", "Fremskridt"],
 						["about", "Om"],
 					] as const
-				).map(([target, label]) => (
-					<button
-						key={target}
-						type="button"
-						aria-current={page === target ? "page" : undefined}
-						{...stylex.props(s.navButton, page === target && s.navActive)}
-						onClick={() => navigate(target)}
-					>
-						<Icon page={target} />
-						{label}
-					</button>
-				))}
+				).map(([target, label]) =>
+					target === "home" || target === "about" ? (
+						<a
+							key={target}
+							href={target === "about" ? "/om/" : "/"}
+							aria-current={page === target ? "page" : undefined}
+							{...stylex.props(s.navButton, page === target && s.navActive)}
+							onClick={(event) => {
+								if (
+									event.button !== 0 ||
+									event.metaKey ||
+									event.ctrlKey ||
+									event.shiftKey ||
+									event.altKey
+								)
+									return;
+								event.preventDefault();
+								navigate(target);
+							}}
+						>
+							<Icon page={target} />
+							{label}
+						</a>
+					) : (
+						<button
+							key={target}
+							type="button"
+							aria-current={page === target ? "page" : undefined}
+							{...stylex.props(s.navButton, page === target && s.navActive)}
+							onClick={() => navigate(target)}
+						>
+							<Icon page={target} />
+							{label}
+						</button>
+					),
+				)}
 			</div>
 		</nav>
 	);

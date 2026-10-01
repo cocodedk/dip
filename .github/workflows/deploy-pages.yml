@@ -8,6 +8,7 @@ on:
       - 'public/**'
       - 'i/data/**'
       - 'scripts/build-sw.mjs'
+      - 'scripts/prerender.mjs'
       - 'scripts/assert-test-count.mjs'
       - 'index.html'
       - 'package.json'

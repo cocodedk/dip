@@ -8,28 +8,28 @@
       @font-face { font-family: "DM Sans"; font-weight: 700; src: url("../node_modules/@fontsource/dm-sans/files/dm-sans-latin-700-normal.woff2") format("woff2"); }
       * { box-sizing: border-box; }
       body { margin: 0; width: 1200px; height: 630px; background: #163143; color: #f7f9fb; font-family: "DM Sans", sans-serif; }
-      main { padding: 54px 68px; height: 100%; display: flex; flex-direction: column; }
-      header { display: flex; align-items: center; gap: 18px; font-size: 30px; font-weight: 700; }
-      header img { width: 58px; height: 58px; }
-      h1 { font-size: 66px; line-height: 1.12; letter-spacing: -2px; margin: 44px 0 18px; font-weight: 700; }
+      main { height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 42px 48px 32px; }
+      header { display: flex; align-items: center; gap: 14px; font-size: 34px; font-weight: 700; line-height: 1; }
+      header img { width: 46px; height: 46px; }
+      h1 { font-size: 58px; line-height: 1.16; letter-spacing: -1.6px; margin: 35px 0 24px; font-weight: 700; }
       h1 span { display: block; }
-      .description { margin: 0; font-size: 27px; line-height: 1.45; color: #cad6df; }
-      .archive { margin: 14px 0 0; font-size: 22px; color: #cad6df; }
-      footer { margin-top: auto; padding-top: 22px; border-top: 1px solid #527083; display: flex; justify-content: space-between; align-items: flex-end; }
-      .domain { font-size: 23px; }
-      .credit { color: #cad6df; font-size: 17px; line-height: 1.6; text-align: right; }
+      .answers { display: flex; gap: 17px; align-items: center; margin-bottom: 24px; }
+      .answers span { width: 47px; height: 47px; border: 2px solid #7995a6; border-radius: 50%; display: grid; place-items: center; font-size: 23px; font-weight: 700; color: #b5c9d4; }
+      .answers .chosen { background: #e2f1eb; border-color: #e2f1eb; color: #11786e; }
+      .description { margin: 0; font-size: 29px; line-height: 1.45; color: #f7f9fb; }
+      .archive { margin: 8px 0 0; font-size: 24px; line-height: 1.45; color: #b5c9d4; }
+      footer { margin-top: auto; font-size: 21px; line-height: 1.45; color: #b5c9d4; }
+      footer strong { display: block; color: #f7f9fb; font-weight: 700; font-size: 25px; margin-bottom: 5px; }
     </style>
   </head>
   <body>
     <main>
-      <header><img src="../public/icon.svg" alt="" width="58" height="58" />Prøveklar</header>
-      <h1><span>Indfødsretsprøven</span><span>Øv dig med tidligere prøver.</span></h1>
-      <p class="description">570 arkivspørgsmål. Danske værdier. Prøver på tid.</p>
-      <p class="archive">Historiske nyheder er ikke aktuelt pensum.</p>
-      <footer>
-        <span class="domain">dip.cocode.dk</span>
-        <span class="credit">Lavet af Babak Bandpey · linkedin.com/in/babakbandpey<br />© 2026 Cocode · cocode.dk</span>
-      </footer>
+      <header><img src="../public/icon.svg" alt="" width="46" height="46" />Prøveklar</header>
+      <h1><span>Øv dig til</span><span>indfødsretsprøven.</span></h1>
+      <div class="answers" aria-hidden="true"><span>A</span><span class="chosen">B</span><span>C</span></div>
+      <p class="description">570 arkivspørgsmål. 13 tidligere prøver.</p>
+      <p class="archive">2020–2026 · Gratis · Også offline</p>
+      <footer><strong>dip.cocode.dk</strong>Lavet af Babak Bandpey · Cocode</footer>
     </main>
   </body>
 </html>

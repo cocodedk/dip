@@ -4,7 +4,7 @@ Mobile first practice for the Danish citizenship test, in Danish, with **570 que
 
 ## Website
 
-[Prøveklar](https://dip.cocode.dk) — a static, Danish practice app.
+[Prøveklar](https://dip.cocode.dk/) — a static, Danish practice app; [About Prøveklar](https://dip.cocode.dk/om/) includes author links, sources, privacy and rights.
 
 ## Features
 
@@ -30,6 +30,8 @@ npm run preview -- --host 127.0.0.1 --port 4173
 ```
 
 Open http://127.0.0.1:4173/ online once and wait for **Klar offline**; then reload offline. A deployed static copy needs HTTPS. An ordinary file opened with `file://` does not install the service worker. The development server does not offer offline installation.
+
+The production build pre-renders the real React Home and About views as readable HTML at `/` and `/om/`, with distinct titles, descriptions, canonical URLs and structured data. JavaScript restores local progress through the same controller. The build generates the sitemap and offline cache; `scripts/og-image.html` is the source for the 1200×630 social image, rendered with `CHROME_PATH=/usr/bin/google-chrome node scripts/render-og.mjs`. Its content hash versions the image URL so revised previews can be fetched.
 
 ## Practice
 

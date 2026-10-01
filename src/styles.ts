@@ -188,6 +188,7 @@ export const s = stylex.create({
 		marginInline: "auto",
 	},
 	navButton: {
+		textDecoration: "none",
 		backgroundColor: "transparent",
 		borderWidth: 0,
 		borderStyle: "solid",
