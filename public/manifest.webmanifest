@@ -1,0 +1,11 @@
+{
+  "name": "Prøveklar — Indfødsretsprøven",
+  "short_name": "Prøveklar",
+  "lang": "da",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F2F5F7",
+  "theme_color": "#163143",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

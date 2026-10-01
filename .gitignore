@@ -1,0 +1,16 @@
+node_modules/
+dist/
+artifacts/
+memory/
+*.tsbuildinfo
+__pycache__/
+.env
+.env.*
+*.env
+*.env.*
+.obsidian/
+.zvec-grep/
+.DS_Store
+i/data/work-reminder.json
+jev-demo*
+scripts/work-reminder.py

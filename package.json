@@ -1,0 +1,31 @@
+{
+	"name": "proeveklar",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host 0.0.0.0",
+		"build": "tsc -b && vite build && node scripts/build-sw.mjs",
+		"preview": "vite preview --host 0.0.0.0",
+		"test": "vitest run --reporter=default --reporter=json --outputFile=artifacts/unit.json && node scripts/assert-test-count.mjs",
+		"lint": "oxlint src scripts/*.mjs && biome format src scripts/*.mjs package.json tsconfig.json vite.config.ts && biome lint src/base.css package.json tsconfig.json"
+	},
+	"dependencies": {
+		"@fontsource/dm-sans": "^5.3.0",
+		"@stylexjs/stylex": "^0.19.1",
+		"react": "^19.3.0",
+		"react-dom": "^19.3.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.8",
+		"@stylexjs/unplugin": "^0.19.1",
+		"@types/react": "^19.3.0",
+		"@types/react-dom": "^19.3.0",
+		"@vitejs/plugin-react": "^6.1.1",
+		"oxlint": "1.78.0",
+		"playwright": "^1.63.0",
+		"typescript": "^7.0.2",
+		"vite": "^8.3.1",
+		"vitest": "^5.0.3"
+	}
+}

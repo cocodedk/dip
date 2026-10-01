@@ -1,0 +1,48 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	margin: 0;
+	background: #f2f5f7;
+	color: #163143;
+	font-family: "DM Sans", sans-serif;
+}
+button,
+input,
+select,
+textarea {
+	font-family: inherit;
+}
+button {
+	touch-action: manipulation;
+}
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+	outline: 3px solid #19637e;
+	outline-offset: 3px;
+}
+p {
+	margin-top: 0;
+}
+svg {
+	vertical-align: middle;
+}
+h1:focus {
+	outline: none;
+}
+progress {
+	border-radius: 9px;
+	overflow: hidden;
+}
+progress::-webkit-progress-bar {
+	background: #dce4e9;
+}
+progress::-webkit-progress-value {
+	background: #11786e;
+}
+::selection {
+	background: #dce6eb;
+}
