@@ -48,3 +48,7 @@ Se [README](README.md#webmcp-and-proof) for kommandoerne, og opdatér dokumentat
 
 Original kode er Apache-2.0; officielle spørgsmål og materialer er undtaget, og deres videredistributionsrettigheder er uafklarede, se [NOTICE](NOTICE) og [rettighedsnotatet](i/reuse-rights.md).
 Medtag aldrig hemmeligheder, intern sessionshukommelse eller personlige eksportfiler i en PR.
+
+## Efter publicering
+
+Ejeren skal manuelt bekræfte ejerskab af `dip.cocode.dk` i Google Search Console og Bing Webmaster Tools og indsende `https://dip.cocode.dk/sitemap.xml` til begge tjenester; adgang til ejerskabsbekræftelse er ikke leveret, så dette trin afventer ejeren.

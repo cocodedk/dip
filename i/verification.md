@@ -1,21 +1,20 @@
 ---
 name: verification
-description: Local delivery evidence and independent review
+description: Reproducible local verification methods
 metadata:
-  type: state
+  type: reference
   updated: 2026-10-01
 ---
 
-The local implementation passed independent read-only review with no blocking findings; the [review receipt](../artifacts/independent-review.json) is bound to the [candidate manifest](../artifacts/candidate-manifest.json). The proof is for the local production build, not a public deployment.
+Run the commands in [README](../README.md#webmcp-and-proof) against a local production build to generate proof receipts and screenshots in `artifacts/`; these local outputs are excluded from the repository.
 
-- [Unit receipt](../artifacts/unit.json): 22/22 tests, with the count asserted by `scripts/assert-test-count.mjs`.
-- [Mutation receipt](../artifacts/mutations.json): both deliberate validation/annotation faults made the original tests fail; source was restored.
-- [Real Chrome proof](../artifacts/browser/proof.json): 713 assertions, all ten tools actually listed by `getTools()` and called through `executeTool()`, correct total/values boundaries, backup/restore, a complete offline 45-question test and saved results after offline reload, no page exceptions or console errors.
-- [Ordinary Chrome proof](../artifacts/browser/without-webmcp.json): eight checks passed with the API absent; the human controls render normally.
-- Mobile screenshots: [320 px](../artifacts/browser/home-320.png), [390 px](../artifacts/browser/home-390.png), [430 px](../artifacts/browser/home-430.png); no horizontal overflow. Playwright only opened pages and captured screenshots; behavior used WebMCP through CDP.
-- [jev-browser observation](../artifacts/jev-browser.txt): opened and read the homepage, ending at the correct local URL; no app state changed.
-- TypeScript production build and oxlint/biome/lintp checks passed. The question bank and all assets are bundled locally; the roughly 118 KB compressed JavaScript chunk includes the whole bank.
+- `npm test` asserts exactly 22 passing tests through `scripts/assert-test-count.mjs`.
+- `npm run lint` checks the source with project-local Oxlint and Biome; `npm run build` includes the TypeScript production check and bundles the question bank and assets.
+- `node scripts/mutation-proof.mjs` checks that deliberate faults make the original tests fail and restores the source afterward.
+- `node scripts/browser-proof.mjs` uses real Chrome `getTools()` and `executeTool()` to exercise scoring boundaries, input rejection, persistence, export/import, registered tools and a complete offline 45-question test.
+- Playwright opens tabs and captures screenshots; behavioral proof acts through WebMCP. A missing tool is reported as `NOT PROVED`.
+- The separate `--without-webmcp` check verifies the ordinary browser interface when the API is absent; README describes its disposable Chrome profile.
 
-Automatic approval review initially blocked exporting nonpublic source/test artifacts to OpenRouter. After the user explicitly approved the frozen packet, **one real Jev request across four option orders returned HTTP 400 without a verdict**; no automatic retry was made, and provider model/cost were not reported. The [attempt receipt](../artifacts/review-attempt.json) records this outcome. The independent internal reviewer already passed the identical unchanged candidate and supplied the completion gate. This is not a successful Jev source review or an averaging-quality result; the installed averaging procedure is documented in [[jev-decisions]].
+Local checks establish behavior of the tested build; deployment verification must also check the live page and published assets. A completion claim requires independent review of the candidate.
 
 Links: [[app-plan]], [[question-bank]], [[offline-architecture]], [[jev-decisions]].

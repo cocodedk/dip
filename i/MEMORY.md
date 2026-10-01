@@ -1,12 +1,12 @@
 # Indfødsretsprøven — research vault
 
-Checked 2026-10-01. The local app is implemented; the linked notes distinguish official facts, historical material and product decisions. The [question bank](data/official-exams.json) contains 570 dated rows, not a claim that every old answer is current; [working memory](../memory/MEMORY.md) tracks delivery checks.
+Checked 2026-10-01. The local app is implemented; the linked notes distinguish official facts, historical material and product decisions. The [question bank](data/official-exams.json) contains 570 dated rows, not a claim that every old answer is current.
 
 ## Now
 
-- [[verification]] — completed local build, 22/22 tests and independent review.
+- [[verification]] — reproducible local build, test and browser-proof methods.
 - [[implementation-decisions]] — first app scope and mobile design.
-- [[jev-decisions]] — live trial passed 3/3 cases in 0.495 seconds; local skill workflow recorded.
+- [[jev-decisions]] — bounded evidence classification and limits of model judgments.
 - [[app-plan]] — build order and acceptance checks.
 - [[question-bank]] — 570 sourced question/answer pairs and coverage limits.
 - [[question-freshness]] — review old facts before using them in current practice.
