@@ -12,21 +12,21 @@
 	},
 	"dependencies": {
 		"@fontsource/dm-sans": "^5.3.0",
-		"@stylexjs/stylex": "^0.19.1",
-		"react": "^19.3.0",
-		"react-dom": "^19.3.0"
+		"@stylexjs/stylex": "^0.19.2",
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.8",
-		"@stylexjs/unplugin": "^0.19.1",
-		"@types/node": "^24.19.0",
+		"@biomejs/biome": "2.6.8",
+		"@stylexjs/unplugin": "^0.19.2",
+		"@types/node": "^26.6.6",
 		"@types/react": "^19.3.0",
 		"@types/react-dom": "^19.3.0",
-		"@vitejs/plugin-react": "^6.1.1",
-		"oxlint": "1.78.0",
-		"playwright": "^1.63.0",
+		"@vitejs/plugin-react": "^6.3.0",
+		"oxlint": "1.94.0",
+		"playwright": "^1.65.1",
 		"typescript": "^7.0.2",
-		"vite": "^8.3.1",
-		"vitest": "^5.0.3"
+		"vite": "^8.3.8",
+		"vitest": "^5.1.0"
 	}
 }
